@@ -1,0 +1,5 @@
+#!/bin/bash
+cd /home/ec2-user/stella-api
+export PORT=80
+export NODE_ENV=production
+forever start server.js
