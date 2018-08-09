@@ -2,4 +2,5 @@
 cd /home/ec2-user/stella-api
 export PORT=80
 export NODE_ENV=production
+export SERVER_URL=1{amazon-server-ip}
 forever start server.js

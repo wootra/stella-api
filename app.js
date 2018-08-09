@@ -1,13 +1,51 @@
+// modules for server
 const express = require("express");
+// modules for debugging
+const morgan = require("morgan");
+// modules for parsing
+const bodyParser = require("body-parser");
+const dbConnect = require("./db/mongo_connect");
+// api modules
 const schedule = require("./apis/schedule.js");
 const basic = require("./apis/basic.js");
-const morgan = require("morgan");
-const bodyParser = require("body-parser");
+
+//guest API moudules
+const _schedule = require("./guestApis/schedule.js");
+
+//admin API modules
+const schedule_admin = require("./apis/schedule_admin.js");
+
+//mongoose connect
+dbConnect();
 
 //register apis here..
-
+const apis = {
+  schedule
+}; //add here
+const guestApis = { _schedule }; //add here
+const adminApis = { schedule_admin };
 const app = express();
+
+//CHECK GUEST KEY
+app.use((req, res, next) => {
+  if (req.header("key") === "GUEST-KEY") {
+    req.url = "/GUEST" + req.url;
+    //router react by req.url..
+  }
+  next();
+});
+
+//CHECK ADMIN KEY
+app.use((req, res, next) => {
+  if (req.header("key") === "ADMIN-KEY") {
+    req.url = "/ADMIN" + req.url;
+    //router react by req.url..
+  }
+  next();
+});
+
 app.use(morgan("dev"));
+
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use((req, res, next) => {
@@ -23,12 +61,25 @@ app.use((req, res, next) => {
   }
   next();
 });
-const apis = { schedule }; //add here
+
+const guestKeys = Object.keys(guestApis);
+for (let apiKey of guestKeys) {
+  let route = "/GUEST/" + apiKey.replace("_", "");
+  console.log(route);
+  app.use(route, guestApis[apiKey]);
+}
+const adminKeys = Object.keys(adminApis);
+for (let apiKey of adminKeys) {
+  let route = "/ADMIN/" + apiKey.replace("_admin", "");
+  console.log(route);
+  app.use(route, adminApis[apiKey]);
+}
 
 const keys = Object.keys(apis);
 for (let apiKey of keys) {
   app.use("/" + apiKey, apis[apiKey]);
 }
+
 //app.use("/", basic); //basic Apis.
 
 //when user access to the invalid api
