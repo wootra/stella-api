@@ -3,7 +3,7 @@ const Promise = require("bluebird");
 
 const express = require("express");
 const router = express.Router();
-const Schedule = require("./models/schedule");
+const Schedule = require("../models/schedule");
 const _url = process.env.SERVER_URL + "/schedule";
 
 //admin

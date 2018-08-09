@@ -3,14 +3,14 @@ const Promise = require("bluebird");
 
 const express = require("express");
 const router = express.Router();
-const Schedule = require("./models/schedule");
+const Schedule = require("../models/schedule");
 
 const _url = process.env.SERVER_URL + "/schedule";
 let _idx = 0;
 // schedule/news
 router.get("/news/count", (req, res, next) => {
-  Schedule.find({}, "_id")
-    .count()
+  Schedule.estimatedDocumentCount() //.find({}, "_id")
+    //.count()
     .then((ret, err) => {
       if (err) {
         next(err);
@@ -81,7 +81,7 @@ router.get("/news", (req, res, next) => {
     let query = schema.toConstructor();
 
     Promise.join(
-      schema.estimatedDocumentCount().exec(),
+      Schedule.estimatedDocumentCount().exec(),
       query()
         .sort({ date: -1 })
         .skip(start)
