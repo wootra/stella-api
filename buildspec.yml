@@ -1,30 +1,38 @@
-version: 0.2
-
+artifacts:
+  files:
+  - README.md
+  - package.json
+  - server.js
+  - app.js
+  - .env
+  - buildspec.yml
+  - appspec.yml
+  - scripts/*
+  - apis/**/*
+  - auth/**
+  - db/*
+  - bin/*
+  - public/**/*
+  - scripts/*
+  - tests/*
+  - uploads/*
+  - node_modules/**/*
+  type: zip
+eb_codebuild_settings:
+  CodeBuildServiceRole: arn:aws:iam::450524724960:role/aws-elasticbeanstalk-ec2-role
+  ComputeType: BUILD_GENERAL1_SMALL
+  Image: aws/codebuild/eb-nodejs-6.10.0-amazonlinux-64:4.0.0
+  Timeout: 10
 phases:
   install:
     commands:
-      # Install dependencies needed for running tests
-      - npm install
-
-      # Upgrade AWS CLI to the latest version
-      - pip install --upgrade awscli
-  pre_build:
-    commands:
-      # Discover and run unit tests in the 'tests' directory
-      - npm test
+    - npm install
+    - pip install --upgrade awscli
   post_build:
     commands:
-      # Remove existing node_modules to clear dev dependencies
-      - rm -r node_modules
-
-      # Install runtime dependencies
-      - npm install --production
-artifacts:
-  type: zip
-  files:
-    - README.md
-    - package.json
-    - server.js
-    - appspec.yml
-    - scripts/*
-    - node_modules/**/*
+    - rm -r node_modules
+    - npm install --production
+  pre_build:
+    commands:
+    - mv target/stella-api.war stella-api.war
+version: 0.2
