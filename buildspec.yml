@@ -18,11 +18,6 @@ artifacts:
   - uploads/*
   - node_modules/**/*
   type: zip
-eb_codebuild_settings:
-  CodeBuildServiceRole: arn:aws:iam::450524724960:role/aws-elasticbeanstalk-ec2-role
-  ComputeType: BUILD_GENERAL1_SMALL
-  Image: aws/codebuild/eb-nodejs-6.10.0-amazonlinux-64:4.0.0
-  Timeout: 10
 phases:
   install:
     commands:
@@ -34,5 +29,5 @@ phases:
     - npm install --production
   pre_build:
     commands:
-    - mv target/stella-api.war stella-api.war
+    - mv target/stella-api.zip stella-api.zip
 version: 0.2
