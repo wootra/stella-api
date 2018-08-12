@@ -1,0 +1,33 @@
+artifacts:
+  files:
+  - README.md
+  - package.json
+  - server.js
+  - app.js
+  - .env
+  - buildspec.yml
+  - appspec.yml
+  - scripts/*
+  - apis/**/*
+  - auth/**
+  - db/*
+  - bin/*
+  - public/**/*
+  - scripts/*
+  - tests/*
+  - uploads/*
+  - node_modules/**/*
+  type: zip
+phases:
+  install:
+    commands:
+    - npm install
+    - pip install --upgrade awscli
+  post_build:
+    commands:
+    - rm -r node_modules
+    - npm install --production
+  pre_build:
+    commands:
+    - mv target/stella-api.zip stella-api.zip
+version: 0.2

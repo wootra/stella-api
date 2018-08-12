@@ -1,0 +1,6 @@
+{
+  "env": {
+    "DEV_GUEST_KEY": "guest-key",
+    "DEV_ADMIN_KEY": "admin_key"
+  }
+}
